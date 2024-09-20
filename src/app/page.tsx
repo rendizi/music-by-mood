@@ -1,7 +1,7 @@
 'use client'
 
 import axios from "axios";
-import { SessionProvider, signIn, signOut, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { useState, useRef, useEffect } from "react";
 
 interface SpotifyPlayer {
@@ -20,28 +20,7 @@ const Home = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const streamRef = useRef<MediaStream | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const [spotifyPlayer, setSpotifyPlayer] = useState<SpotifyPlayer | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null); // Track the audio instance
-
-  // Initialize the Spotify Player
-  useEffect(() => {
-    if (session) {
-      console.log((session as any).token)
-      const token = (session as any).token.access_token; // Replace with your method to get the access token
-      const player = new window.Spotify.Player({
-        name: 'Web Playback SDK',
-        getOAuthToken: (cb: (token: string) => void) => { cb(token); }, // Specify the type for the callback
-        volume: 0.5
-      });
-
-      player.addListener('ready', ({ device_id }: { device_id: string }) => { // Specify the type for device_id
-        console.log('Ready with Device ID', device_id);
-        setSpotifyPlayer(player);
-      });
-
-      player.connect();
-    }
-  }, [session]);
 
   const startCamera = async () => {
     try {
